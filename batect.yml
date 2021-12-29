@@ -1,0 +1,64 @@
+project_name: f1-stats
+
+containers:
+
+  build-env:
+    image: maven:3.6.1-jdk-11
+    volumes:
+      - local: .
+        container: /code
+      - local: ~/.m2
+        container: /root/.m2
+    working_directory: /code
+
+  deploy-env:
+    image: jboss/wildfly
+    volumes:
+      - local: .
+        container: /code
+    working_directory: /code
+
+tasks:
+
+  build:
+    description: Build the application.
+    group: Build tasks
+    run:
+      container: build-env
+      command: mvn clean install -DskipTests
+
+  unit:
+    description: Run the unit tests.
+    group: Test tasks
+    run:
+      container: build-env
+      command: mvn test
+
+  deploy:
+    description: Build and deploy the application to JBoss.
+    group: Test tasks
+    dependencies:
+      - build-env
+    prerequisites:
+      - build
+    run:
+      container: deploy-env
+      command: "'cp f1-stats-war/target/f1-stats-war.war /opt/jboss/wildfly/standalone/deployments/ && /opt/jboss/wildfly/bin/standalone.sh'"
+      entrypoint: /bin/sh -c
+      ports:
+        - local: 6001
+          container: 6001
+        - local: 9990
+          container: 9990
+
+  shell:
+    description: Start a shell in the development environment.
+    group: Utility tasks
+    run:
+      container: deploy-env
+      command: bash
+
+include:
+  - type: git
+    repo: https://github.com/batect/java-bundle.git
+    ref: 0.1.0
