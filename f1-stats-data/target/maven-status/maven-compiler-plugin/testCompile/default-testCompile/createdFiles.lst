@@ -1,7 +1,0 @@
-com/william/dev/f1stats/data/db/circuits/CircuitTestData.class
-com/william/dev/f1stats/data/remote/DataParserTest.class
-com/william/dev/f1stats/data/db/drivers/SqliteDriverDatabaseClientTest.class
-com/william/dev/f1stats/data/remote/DataUpdaterBeanTest.class
-com/william/dev/f1stats/data/db/drivers/DriverTestData.class
-com/william/dev/f1stats/data/db/circuits/SqliteCircuitDatabaseClientTest.class
-com/william/dev/f1stats/data/db/utils/TestDataReader.class

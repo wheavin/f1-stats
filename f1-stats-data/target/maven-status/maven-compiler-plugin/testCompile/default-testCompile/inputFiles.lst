@@ -1,7 +1,0 @@
-/code/f1-stats-data/src/test/java/com/william/dev/f1stats/data/db/utils/TestDataReader.java
-/code/f1-stats-data/src/test/java/com/william/dev/f1stats/data/db/drivers/DriverTestData.java
-/code/f1-stats-data/src/test/java/com/william/dev/f1stats/data/db/drivers/SqliteDriverDatabaseClientTest.java
-/code/f1-stats-data/src/test/java/com/william/dev/f1stats/data/db/circuits/CircuitTestData.java
-/code/f1-stats-data/src/test/java/com/william/dev/f1stats/data/db/circuits/SqliteCircuitDatabaseClientTest.java
-/code/f1-stats-data/src/test/java/com/william/dev/f1stats/data/remote/DataUpdaterBeanTest.java
-/code/f1-stats-data/src/test/java/com/william/dev/f1stats/data/remote/DataParserTest.java

@@ -1,5 +1,8 @@
-# Maven
-/target
+# Project
+.classpath
+.project
+.settings/
+target/
 
 # Intellij
 .idea
