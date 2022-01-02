@@ -3,13 +3,32 @@ package com.william.dev.f1.stats.remote;
 import com.william.dev.f1.stats.remote.http.HttpClient;
 import lombok.extern.slf4j.Slf4j;
 
+import javax.inject.Inject;
+
+import static com.william.dev.f1stats.common.Constants.DATA_SOURCE_HOSTNAME;
 import static org.apache.http.entity.ContentType.APPLICATION_JSON;
 
 @Slf4j
 public class ErgastClient implements RemoteClient {
 
-    private String hostname = "http://ergast.com";
-    private final HttpClient httpClient = new HttpClient();
+    private static final String DEFAULT_DATA_SOURCE_HOSTNAME = "http://ergast.com";
+    private final HttpClient httpClient;
+    private String hostname;
+
+    @Inject
+    public ErgastClient() {
+        this.httpClient = new HttpClient();
+        this.hostname = loadHostname();
+    }
+
+    private String loadHostname() {
+        final String hostnameSetInEnv = System.getenv(DATA_SOURCE_HOSTNAME);
+        if (hostnameSetInEnv == null || hostnameSetInEnv.trim().isEmpty()) {
+            return DEFAULT_DATA_SOURCE_HOSTNAME;
+        }
+        log.info("Remote data source hostname set to '{}'", hostnameSetInEnv);
+        return hostnameSetInEnv;
+    }
 
     @Override
     public String getAllCircuits() {

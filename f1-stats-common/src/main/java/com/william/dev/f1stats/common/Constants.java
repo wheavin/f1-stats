@@ -37,4 +37,8 @@ public class Constants {
     public static final String TEAM_JSON_CONSTRUCTORS_KEY = "Constructors";
     public static final String TEAM_JSON_NAME_KEY = "name";
     public static final String TEAM_JSON_NATIONALITY_KEY = "nationality";
+
+    // Environment variables
+    public static final String DATA_SOURCE_HOSTNAME = "DATA_SOURCE_HOSTNAME";
+    public static final String UPDATE_DATA_ON_STARTUP = "UPDATE_DATA_ON_STARTUP";
 }

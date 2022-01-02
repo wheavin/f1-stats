@@ -13,9 +13,19 @@
 
     <dependencies>
         <dependency>
+            <groupId>com.william.dev</groupId>
+            <artifactId>f1-stats-common</artifactId>
+            <version>${project.parent.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
             <version>4.5.13</version>
+        </dependency>
+        <dependency>
+            <groupId>javax</groupId>
+            <artifactId>javaee-api</artifactId>
         </dependency>
     </dependencies>
 </project>

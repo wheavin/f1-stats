@@ -12,5 +12,5 @@ public final class SqlStatements {
 
     public static final String GET_ALL_TEAMS_QUERY = "SELECT * FROM Teams";
     public static final String GET_TEAM_BY_NAME_QUERY = "SELECT * FROM Teams WHERE name LIKE ?";
-    public static final String INSERT_TEAM_SQL = "INSERT INTO Teams (name, country, description, yearFounded, numberOfConstructorsChampionships) VALUES (?, ?, ?, ?, ?)";
+    public static final String INSERT_TEAM_SQL = "INSERT INTO Teams (name, nationality, wiki) VALUES (?, ?, ?)";
 }

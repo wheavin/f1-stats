@@ -7,6 +7,8 @@ import javax.ejb.Singleton;
 import javax.ejb.Startup;
 import javax.inject.Inject;
 
+import static com.william.dev.f1stats.common.Constants.UPDATE_DATA_ON_STARTUP;
+
 @Singleton
 @Startup
 @Slf4j
@@ -30,7 +32,7 @@ public class StartupBean {
 
     private boolean isUpdateOnStartup() {
         try {
-            return Boolean.parseBoolean(System.getProperty("f1stats.updateonstartup"));
+            return Boolean.parseBoolean(System.getenv(UPDATE_DATA_ON_STARTUP));
         } catch (final Exception ex) {
             log.info("System property not set", ex);
             return false;

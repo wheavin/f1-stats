@@ -43,6 +43,9 @@ tasks:
       - build
     run:
       container: deploy-env
+      environment:
+        UPDATE_DATA_ON_STARTUP: "true"
+        DATA_SOURCE_HOSTNAME: "http://ergast.com"
       command: "'cp f1-stats-war/target/f1-stats-war.war /opt/jboss/wildfly/standalone/deployments/ && /opt/jboss/wildfly/bin/standalone.sh'"
       entrypoint: /bin/sh -c
       ports:

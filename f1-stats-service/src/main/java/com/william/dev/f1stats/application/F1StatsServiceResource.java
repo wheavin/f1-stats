@@ -112,7 +112,7 @@ public class F1StatsServiceResource implements F1StatsService {
 
     @Override
     @GET
-    @Path("/team")
+    @Path("/team/all")
     public Response listAllTeams() {
         log.info("Received request to get all teams");
         try {
