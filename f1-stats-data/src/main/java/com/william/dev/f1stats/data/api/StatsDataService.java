@@ -16,4 +16,10 @@ public interface StatsDataService {
     Set<Driver> listAllDrivers() throws DataServiceException;
 
     Optional<Driver> getDriver(String firstName, String lastName) throws DataServiceException;
+
+    Set<Team> listAllTeams() throws DataServiceException;
+
+    Set<String> listAllTeamNames() throws DataServiceException;
+
+    Optional<Team> getTeam(String name) throws DataServiceException;
 }

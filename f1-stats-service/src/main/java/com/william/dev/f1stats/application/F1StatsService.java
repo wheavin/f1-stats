@@ -13,4 +13,10 @@ public interface F1StatsService {
     Response listAllDrivers();
 
     Response getDriver(String firstName, String lastName);
+
+    Response listAllTeams();
+
+    Response listAllTeamNames();
+
+    Response getTeam(String name);
 }

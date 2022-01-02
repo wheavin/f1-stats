@@ -15,10 +15,11 @@ import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options
 import static com.google.common.truth.Truth.assertThat;
 import static org.apache.http.entity.ContentType.APPLICATION_JSON;
 
-public class ErgastCircuitClientTest {
+public class ErgastClientTest {
 
     private static final String GET_ALL_CIRCUITS_ENDPOINT = "/api/f1/circuits.json?limit=9999";
     private static final String GET_ALL_DRIVERS_ENDPOINT = "/api/f1/drivers.json?limit=9999";
+    private static final String GET_ALL_CONSTRUCTORS_ENDPOINT = "/api/f1/constructors.json?limit=9999";
 
     private static WireMockServer wireMockServer;
     private ErgastClient objUnderTest;
@@ -82,6 +83,28 @@ public class ErgastCircuitClientTest {
                         .withStatus(404)
                         .withBody("ergast.com: Temporary failure in name resolution")));
         final String response = objUnderTest.getAllCircuits();
+        assertThat(response).isEmpty();
+    }
+
+    @Test
+    public void gets_all_teams_successfully() {
+        stubFor(get(urlEqualTo(GET_ALL_CONSTRUCTORS_ENDPOINT))
+                .willReturn(aResponse()
+                        .withHeader("Content-Type", APPLICATION_JSON.toString())
+                        .withStatus(200)
+                        .withBodyFile("all_teams_response.json")));
+        final String response = objUnderTest.getAllTeams();
+        assertThat(response).contains("Racing Point");
+    }
+
+    @Test
+    public void get_all_teams_request_fails() {
+        stubFor(get(urlEqualTo(GET_ALL_CONSTRUCTORS_ENDPOINT))
+                .willReturn(aResponse()
+                        .withHeader("Content-Type", APPLICATION_JSON.toString())
+                        .withStatus(404)
+                        .withBody("ergast.com: Temporary failure in name resolution")));
+        final String response = objUnderTest.getAllTeams();
         assertThat(response).isEmpty();
     }
 }

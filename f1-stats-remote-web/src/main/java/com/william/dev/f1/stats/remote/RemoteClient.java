@@ -5,4 +5,6 @@ public interface RemoteClient {
     String getAllCircuits();
 
     String getAllDrivers();
+
+    String getAllTeams();
 }

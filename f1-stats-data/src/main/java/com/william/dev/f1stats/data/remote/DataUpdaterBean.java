@@ -3,8 +3,10 @@ package com.william.dev.f1stats.data.remote;
 import com.william.dev.f1.stats.remote.RemoteClient;
 import com.william.dev.f1stats.data.api.Circuit;
 import com.william.dev.f1stats.data.api.Driver;
+import com.william.dev.f1stats.data.api.Team;
 import com.william.dev.f1stats.data.db.circuits.CircuitDatabaseClient;
 import com.william.dev.f1stats.data.db.drivers.DriverDatabaseClient;
+import com.william.dev.f1stats.data.db.teams.TeamDatabaseClient;
 import com.william.dev.f1stats.data.exception.DataInsertionException;
 import com.william.dev.f1stats.data.exception.DataParseException;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +26,9 @@ public class DataUpdaterBean {
 
     @Inject
     private DriverDatabaseClient driverDatabaseClient;
+
+    @Inject
+    private TeamDatabaseClient teamDatabaseClient;
 
     private final DataParser dataParser = new DataParser();
 
@@ -52,6 +57,20 @@ public class DataUpdaterBean {
                     getDurationAsSeconds(startTime), driversToAdd.size());
         } catch (final DataParseException | DataInsertionException ex) {
             log.error("Error updating driver data", ex);
+        }
+    }
+
+    public void updateTeams() {
+        log.info("Updating all teams");
+        final long startTime = System.nanoTime();
+        final String teamData = remoteClient.getAllTeams();
+        try {
+            final Set<Team> teamsToAdd = dataParser.parseTeams(teamData);
+            teamDatabaseClient.addTeams(teamsToAdd);
+            log.info("Update of teams completed in {}s. Number of teams inserted = {}",
+                    getDurationAsSeconds(startTime), teamsToAdd.size());
+        } catch (final DataParseException | DataInsertionException ex) {
+            log.error("Error updating team data", ex);
         }
     }
 

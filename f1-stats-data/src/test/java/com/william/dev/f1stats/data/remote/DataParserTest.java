@@ -2,6 +2,7 @@ package com.william.dev.f1stats.data.remote;
 
 import com.william.dev.f1stats.data.api.Circuit;
 import com.william.dev.f1stats.data.api.Driver;
+import com.william.dev.f1stats.data.api.Team;
 import com.william.dev.f1stats.data.db.utils.TestDataReader;
 import com.william.dev.f1stats.data.exception.DataParseException;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,6 +25,8 @@ public class DataParserTest {
     private static final String NO_CIRCUITS_RETURNED_FILE_PATH = TEST_DATA_FOLDER + "no_circuits_returned.txt";
     private static final String ALL_DRIVERS_RETURNED_FILE_PATH = TEST_DATA_FOLDER + "all_drivers_data.txt";
     private static final String NO_DRIVERS_RETURNED_FILE_PATH = TEST_DATA_FOLDER + "no_drivers_returned.txt";
+    private static final String ALL_TEAMS_RETURNED_FILE_PATH = TEST_DATA_FOLDER + "all_teams_data.txt";
+    private static final String NO_TEAMS_RETURNED_FILE_PATH = TEST_DATA_FOLDER + "no_teams_returned.txt";
 
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -96,5 +99,40 @@ public class DataParserTest {
         final DataParseException exceptionThrown = assertThrows(
                 DataParseException.class, () -> objUnderTest.parseDrivers(allDriverData));
         assertThat(exceptionThrown).hasMessageThat().contains("No drivers found");
+    }
+
+    @Test
+    public void parses_teams_successfully() throws DataParseException, ParseException {
+        final String allTeamData = TestDataReader.readData(ALL_TEAMS_RETURNED_FILE_PATH);
+        final Set<Team> allTeamsParsed = objUnderTest.parseTeams(allTeamData);
+        assertThat(allTeamsParsed).hasSize(211);
+        assertThat(allTeamsParsed).contains(Team.builder()
+                .name("Williams")
+                .nationality("British")
+                .wiki("http://en.wikipedia.org/wiki/Williams_Grand_Prix_Engineering")
+                .build());
+    }
+
+    @ParameterizedTest
+    @NullAndEmptySource
+    @ValueSource(strings = {
+            " ",
+            "{}",
+            "{\"MRData\":",
+            "{\"MRData\":{}}",
+            "{\"MRData\":{\"ConstructorTable\":{}}}"
+    })
+    public void does_not_parse_invalid_team_data(final String input) {
+        final DataParseException exceptionThrown = assertThrows(
+                DataParseException.class, () -> objUnderTest.parseTeams(input));
+        assertThat(exceptionThrown).hasMessageThat().contains("Invalid team data");
+    }
+
+    @Test
+    public void empty_team_list_retured() {
+        final String allTeamData = TestDataReader.readData(NO_TEAMS_RETURNED_FILE_PATH);
+        final DataParseException exceptionThrown = assertThrows(
+                DataParseException.class, () -> objUnderTest.parseTeams(allTeamData));
+        assertThat(exceptionThrown).hasMessageThat().contains("No teams found");
     }
 }

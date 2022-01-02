@@ -1,22 +1,17 @@
 package com.william.dev.f1stats.data.db.circuits;
 
 import com.william.dev.f1stats.data.api.Circuit;
-import com.william.dev.f1stats.data.db.ConnectionFactory;
+import com.william.dev.f1stats.data.db.DatabaseClientTestBase;
 import com.william.dev.f1stats.data.exception.DataInsertionException;
 import com.william.dev.f1stats.data.exception.DataServiceException;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -31,8 +26,6 @@ import static com.william.dev.f1stats.data.db.circuits.CircuitTestData.noCircuit
 import static com.william.dev.f1stats.data.db.circuits.CircuitTestData.partialCircuitResultSet;
 import static com.william.dev.f1stats.data.db.circuits.CircuitTestData.silverstoneCircuit;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
@@ -40,24 +33,10 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class SqliteCircuitDatabaseClientTest {
-    @Mock
-    private ConnectionFactory mockConnectionFactory;
-
-    @Mock
-    private Connection mockConnection;
-
-    @Mock
-    private PreparedStatement mockStatement;
+public class SqliteCircuitDatabaseClientTest extends DatabaseClientTestBase {
 
     @InjectMocks
     private SqliteCircuitDatabaseClient objUnderTest;
-
-    @BeforeEach
-    public void setup() throws Exception {
-        doReturn(mockStatement).when(mockConnection).prepareStatement(anyString());
-        doReturn(mockConnection).when(mockConnectionFactory).getConnection();
-    }
 
     @Test
     public void gets_all_circuits() throws Exception {
@@ -75,7 +54,7 @@ public class SqliteCircuitDatabaseClientTest {
 
     @Test
     public void get_all_circuits_with_exception() throws Exception {
-        when(mockStatement.executeQuery()).thenThrow(new SQLException("Whoops!"));
+        mockSqlExceptionOnQuery();
         final Exception exceptionThrown = assertThrows(DataServiceException.class, () -> objUnderTest.getAllCircuits());
         assertThat(exceptionThrown.getMessage()).isEqualTo("Error fetching all circuits from database");
     }
@@ -108,7 +87,7 @@ public class SqliteCircuitDatabaseClientTest {
 
     @Test
     public void gets_all_circuits_with_exception() throws Exception {
-        when(mockStatement.executeQuery()).thenThrow(new SQLException("Whoops!"));
+        mockSqlExceptionOnQuery();
         final Exception exceptionThrown = assertThrows(DataServiceException.class, () -> objUnderTest.getAllCircuitNames());
         assertThat(exceptionThrown.getMessage()).isEqualTo("Error fetching all circuit names from database");
     }
@@ -130,7 +109,7 @@ public class SqliteCircuitDatabaseClientTest {
 
     @Test
     public void get_specified_circuit_with_exception() throws Exception {
-        when(mockStatement.executeQuery()).thenThrow(new SQLException("Some error occurred"));
+        mockSqlExceptionOnQuery();
         final Exception exceptionThrown = assertThrows(DataServiceException.class, () -> objUnderTest.getCircuit("Silverstone"));
         assertThat(exceptionThrown.getMessage()).isEqualTo("Error fetching circuit 'Silverstone' from database");
     }
@@ -150,10 +129,10 @@ public class SqliteCircuitDatabaseClientTest {
 
     @Test
     public void add_circuits_throws_exception() throws Exception {
-        when(mockStatement.execute()).thenThrow(new SQLException("some error occurred"));
+        mockSqlExceptionOnAdd();
         final Set<Circuit> circuitsToAdd = createCircuits();
         final Exception exceptionThrown = assertThrows(DataInsertionException.class, () -> objUnderTest.addCircuits(circuitsToAdd));
-        assertThat(exceptionThrown.getMessage()).contains("some error occurred");
+        assertThat(exceptionThrown.getMessage()).contains("Some error occurred");
     }
 
     private Set<Circuit> createCircuits() {

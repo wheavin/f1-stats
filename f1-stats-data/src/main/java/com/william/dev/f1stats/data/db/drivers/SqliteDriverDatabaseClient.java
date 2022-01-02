@@ -23,7 +23,7 @@ import static com.william.dev.f1stats.common.Constants.DRIVER_DB_DOB_KEY;
 import static com.william.dev.f1stats.common.Constants.DRIVER_DB_FIRST_NAME_KEY;
 import static com.william.dev.f1stats.common.Constants.DRIVER_DB_LAST_NAME_KEY;
 import static com.william.dev.f1stats.common.Constants.DRIVER_DB_NATIONALITY_KEY;
-import static com.william.dev.f1stats.common.Constants.DRIVER_DB_WIKI_KEY;
+import static com.william.dev.f1stats.common.Constants.DB_WIKI_KEY;
 import static com.william.dev.f1stats.common.StringUtils.isNullOrEmpty;
 
 @Slf4j
@@ -43,7 +43,7 @@ public class SqliteDriverDatabaseClient implements DriverDatabaseClient {
                     allDrivers.add(driver);
                 }
             }
-        } catch (SQLException ex) {
+        } catch (final SQLException ex) {
             throw new DataServiceException("Error fetching all drivers from database", ex);
         }
         log.debug("Found drivers: {}", allDrivers);
@@ -54,7 +54,7 @@ public class SqliteDriverDatabaseClient implements DriverDatabaseClient {
         return !isNullOrEmpty(resultSet.getString(DRIVER_DB_FIRST_NAME_KEY)) &&
                 !isNullOrEmpty(resultSet.getString(DRIVER_DB_LAST_NAME_KEY)) &&
                 !isNullOrEmpty(resultSet.getString(DRIVER_DB_NATIONALITY_KEY)) &&
-                !isNullOrEmpty(resultSet.getString(DRIVER_DB_WIKI_KEY));
+                !isNullOrEmpty(resultSet.getString(DB_WIKI_KEY));
     }
 
     private Driver toDriver(final ResultSet resultSet) throws SQLException {
@@ -62,7 +62,7 @@ public class SqliteDriverDatabaseClient implements DriverDatabaseClient {
         final String lastName = resultSet.getString(DRIVER_DB_LAST_NAME_KEY);
         final String nationality = resultSet.getString(DRIVER_DB_NATIONALITY_KEY);
         final java.util.Date dateOfBirth = resultSet.getDate(DRIVER_DB_DOB_KEY);
-        final String wiki = resultSet.getString(DRIVER_DB_WIKI_KEY);
+        final String wiki = resultSet.getString(DB_WIKI_KEY);
         return new Driver(firstName, lastName, nationality, dateOfBirth, wiki);
     }
 

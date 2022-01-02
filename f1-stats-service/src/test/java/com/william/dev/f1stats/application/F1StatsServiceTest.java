@@ -1,9 +1,6 @@
 package com.william.dev.f1stats.application;
 
-import com.william.dev.f1stats.application.dto.CircuitDto;
-import com.william.dev.f1stats.application.dto.CircuitsDto;
-import com.william.dev.f1stats.application.dto.DriverDto;
-import com.william.dev.f1stats.application.dto.DriversDto;
+import com.william.dev.f1stats.application.dto.*;
 import com.william.dev.f1stats.data.db.SqliteConnectionFactory;
 import de.hilling.junit.cdi.CdiTestJunitExtension;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,6 +20,7 @@ import java.util.Set;
 import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.lenient;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(CdiTestJunitExtension.class)
@@ -173,6 +171,61 @@ public class F1StatsServiceTest {
     public void get_specified_driver_throws_exception() throws Exception {
         when(mockStatement.executeQuery()).thenThrow(new SQLException("some error"));
         final Response response = objUnderTest.getDriver("Fernando", "Alonso");
+        assertInternalServerError(response);
+    }
+
+    @Test
+    public void list_all_teams_returns_list_successfully() throws Exception {
+        when(mockStatement.executeQuery()).thenReturn(TestData.allTeamsDataSet());
+
+        final Response response = objUnderTest.listAllTeams();
+        final TeamsDto teamsReturned = (TeamsDto) response.getEntity();
+        assertThat(teamsReturned.getTeams()).hasSize(1);
+
+        final TeamDto teamReturned = teamsReturned.getTeams().iterator().next();
+        assertThat(teamReturned.getName()).isEqualTo("Scuderia Ferrari");
+        assertThat(teamReturned.getNationality()).isEqualTo("Italy");
+        assertThat(teamReturned.getWiki()).isEqualTo("https://en.wikipedia.org/wiki/Scuderia_Ferrari");
+    }
+
+    @Test
+    public void list_all_teams_returns_empty_list() throws Exception {
+        when(mockStatement.executeQuery()).thenReturn(TestData.emptyDataSet());
+
+        final Response response = objUnderTest.listAllTeams();
+        final TeamsDto teamsReturned = (TeamsDto) response.getEntity();
+        assertThat(teamsReturned.getTeams()).isEmpty();
+    }
+
+    @Test
+    public void list_all_teams_throws_exception() throws Exception {
+        when(mockStatement.executeQuery()).thenThrow(new SQLException("Error when executing query"));
+        final Response response = objUnderTest.listAllTeams();
+        assertInternalServerError(response);
+    }
+
+    @Test
+    public void get_specified_team_successfully() throws Exception {
+        when(mockStatement.executeQuery()).thenReturn(TestData.allTeamsDataSet());
+
+        final Response response = objUnderTest.getTeam("Scuderia Ferrari");
+        final TeamDto teamReturned = (TeamDto) response.getEntity();
+        assertThat(teamReturned.getName()).isEqualTo("Scuderia Ferrari");
+        assertThat(teamReturned.getNationality()).isEqualTo("Italy");
+        assertThat(teamReturned.getWiki()).isEqualTo("https://en.wikipedia.org/wiki/Scuderia_Ferrari");
+    }
+
+    @Test
+    public void get_specified_team_not_found() throws Exception {
+        when(mockStatement.executeQuery()).thenReturn(TestData.emptyDataSet());
+        final Response response = objUnderTest.getTeam("Scuderia Ferrari");
+        assertBadRequest(response, "Team 'Scuderia Ferrari' not found");
+    }
+
+    @Test
+    public void get_specified_team_throws_exception() throws Exception {
+        when(mockStatement.executeQuery()).thenThrow(new SQLException("some error"));
+        final Response response = objUnderTest.getTeam("Scuderia Ferrari");
         assertInternalServerError(response);
     }
 

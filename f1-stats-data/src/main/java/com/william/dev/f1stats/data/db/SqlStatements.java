@@ -9,4 +9,8 @@ public final class SqlStatements {
     public static final String GET_ALL_DRIVERS_QUERY = "SELECT * FROM Drivers";
     public static final String GET_DRIVER_BY_NAME_QUERY = "SELECT * FROM Drivers WHERE firstName LIKE ? AND lastName like ?";
     public static final String INSERT_DRIVER_SQL = "INSERT INTO Drivers (firstName, lastName, nationality, dateOfBirth, wiki) VALUES (?, ?, ?, ?, ?)";
+
+    public static final String GET_ALL_TEAMS_QUERY = "SELECT * FROM Teams";
+    public static final String GET_TEAM_BY_NAME_QUERY = "SELECT * FROM Teams WHERE name LIKE ?";
+    public static final String INSERT_TEAM_SQL = "INSERT INTO Teams (name, country, description, yearFounded, numberOfConstructorsChampionships) VALUES (?, ?, ?, ?, ?)";
 }

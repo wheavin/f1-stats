@@ -4,9 +4,12 @@ import com.william.dev.f1stats.application.dto.CircuitDto;
 import com.william.dev.f1stats.application.dto.CircuitsDto;
 import com.william.dev.f1stats.application.dto.DriverDto;
 import com.william.dev.f1stats.application.dto.DriversDto;
+import com.william.dev.f1stats.application.dto.TeamDto;
+import com.william.dev.f1stats.application.dto.TeamsDto;
 import com.william.dev.f1stats.data.api.Circuit;
 import com.william.dev.f1stats.data.api.Driver;
 import com.william.dev.f1stats.data.api.StatsDataService;
+import com.william.dev.f1stats.data.api.Team;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.inject.Inject;
@@ -103,6 +106,42 @@ public class F1StatsServiceResource implements F1StatsService {
             return badRequestResponse(String.format("Driver '%s %s' not found", firstName, lastName));
         } catch (final Exception ex) {
             log.error("Error occurred when getting driver: {} {}", firstName, lastName, ex);
+            return serverErrorResponse();
+        }
+    }
+
+    @Override
+    @GET
+    @Path("/team")
+    public Response listAllTeams() {
+        log.info("Received request to get all teams");
+        try {
+            final Set<Team> teams = dataService.listAllTeams();
+            log.debug("Found teams: {}", teams);
+            return successResponse(new TeamsDto(teams));
+        } catch (final Exception ex) {
+            log.error("Error occurred when getting all teams", ex);
+            return serverErrorResponse();
+        }
+    }
+
+    @Override
+    public Response listAllTeamNames() {
+        return null;
+    }
+
+    @Override
+    @GET
+    @Path("/team")
+    public Response getTeam(@QueryParam("name") final String name) {
+        try {
+            final Optional<Team> team = dataService.getTeam(name);
+            if (team.isPresent()) {
+                return successResponse(new TeamDto(team.get()));
+            }
+            return badRequestResponse(String.format("Team '%s' not found", name));
+        } catch (final Exception ex) {
+            log.error("Error occurred when getting team: {}", name);
             return serverErrorResponse();
         }
     }

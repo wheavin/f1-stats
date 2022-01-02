@@ -1,22 +1,17 @@
 package com.william.dev.f1stats.data.db.drivers;
 
 import com.william.dev.f1stats.data.api.Driver;
-import com.william.dev.f1stats.data.db.ConnectionFactory;
+import com.william.dev.f1stats.data.db.DatabaseClientTestBase;
 import com.william.dev.f1stats.data.exception.DataInsertionException;
 import com.william.dev.f1stats.data.exception.DataServiceException;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
@@ -32,32 +27,16 @@ import static com.william.dev.f1stats.data.db.drivers.DriverTestData.fernandoAlo
 import static com.william.dev.f1stats.data.db.drivers.DriverTestData.noDriversResultSet;
 import static com.william.dev.f1stats.data.db.drivers.DriverTestData.partialDriverResultSet;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class SqliteDriverDatabaseClientTest {
-    @Mock
-    private ConnectionFactory mockConnectionFactory;
-
-    @Mock
-    private Connection mockConnection;
-
-    @Mock
-    private PreparedStatement mockStatement;
+public class SqliteDriverDatabaseClientTest extends DatabaseClientTestBase {
 
     @InjectMocks
     private SqliteDriverDatabaseClient objUnderTest;
-
-    @BeforeEach
-    public void setup() throws SQLException {
-        doReturn(mockConnection).when(mockConnectionFactory).getConnection();
-        doReturn(mockStatement).when(mockConnection).prepareStatement(anyString());
-    }
 
     @Test
     public void gets_all_drivers_successfully() throws Exception {
@@ -75,7 +54,7 @@ public class SqliteDriverDatabaseClientTest {
 
     @Test
     public void gets_all_circuits_with_exception() throws Exception {
-        when(mockStatement.executeQuery()).thenThrow(new SQLException("Whoops!"));
+        mockSqlExceptionOnQuery();
         final Exception exceptionThrown = assertThrows(DataServiceException.class, () -> objUnderTest.getAllDrivers());
         assertThat(exceptionThrown.getMessage()).isEqualTo("Error fetching all drivers from database");
     }
@@ -111,7 +90,7 @@ public class SqliteDriverDatabaseClientTest {
 
     @Test
     public void get_specified_driver_with_exception() throws Exception {
-        when(mockStatement.executeQuery()).thenThrow(new SQLException("Some error occurred"));
+        mockSqlExceptionOnQuery();
         final Exception exceptionThrown = assertThrows(DataServiceException.class, () -> objUnderTest.getDriver("Fernando", "Alonso"));
         assertThat(exceptionThrown.getMessage()).isEqualTo("Error fetching driver 'Fernando Alonso' from database");
     }
@@ -131,11 +110,11 @@ public class SqliteDriverDatabaseClientTest {
 
     @Test
     public void add_drivers_throws_exception() throws Exception {
-        when(mockStatement.execute()).thenThrow(new SQLException("some error occurred"));
+        mockSqlExceptionOnAdd();
         final Set<Driver> driversToAdd = createDrivers();
         final Exception exceptionThrown = assertThrows(
                 DataInsertionException.class, () -> objUnderTest.addDrivers(driversToAdd));
-        assertThat(exceptionThrown).hasMessageThat().contains("some error occurred");
+        assertThat(exceptionThrown).hasMessageThat().contains("Some error occurred");
     }
 
     private Set<Driver> createDrivers() {

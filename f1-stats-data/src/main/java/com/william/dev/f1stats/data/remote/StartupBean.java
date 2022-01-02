@@ -22,6 +22,7 @@ public class StartupBean {
             log.info("Updating data...");
             dataUpdaterBean.updateCircuits();
             dataUpdaterBean.updateDrivers();
+            dataUpdaterBean.updateTeams();
         } else {
             log.info("Skipping data update");
         }

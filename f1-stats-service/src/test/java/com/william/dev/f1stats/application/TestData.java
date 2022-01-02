@@ -4,11 +4,7 @@ import com.william.dev.f1stats.data.db.utils.ResultSetStub;
 
 import java.sql.Date;
 import java.sql.ResultSet;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class TestData {
 
@@ -49,6 +45,16 @@ public class TestData {
         fernandoAlonso.put("wiki", "https://en.wikipedia.org/wiki/Fernando_Alonso");
         driverData.add(fernandoAlonso);
         return new ResultSetStub(driverData);
+    }
+
+    public static ResultSet allTeamsDataSet() {
+        final List<Map<String, Object>> teamData = new ArrayList<>();
+        final Map<String, Object> ferrari = new HashMap<>();
+        ferrari.put("name", "Scuderia Ferrari");
+        ferrari.put("nationality", "Italy");
+        ferrari.put("wiki", "https://en.wikipedia.org/wiki/Scuderia_Ferrari");
+        teamData.add(ferrari);
+        return new ResultSetStub(teamData);
     }
 
     static ResultSet emptyDataSet() {

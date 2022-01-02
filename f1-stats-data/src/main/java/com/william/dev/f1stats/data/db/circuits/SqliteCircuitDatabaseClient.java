@@ -20,7 +20,7 @@ import java.util.Set;
 
 import static com.william.dev.f1stats.common.Constants.CIRCUIT_DB_COUNTRY_KEY;
 import static com.william.dev.f1stats.common.Constants.CIRCUIT_DB_NAME_KEY;
-import static com.william.dev.f1stats.common.Constants.CIRCUIT_DB_WIKI_KEY;
+import static com.william.dev.f1stats.common.Constants.DB_WIKI_KEY;
 import static com.william.dev.f1stats.common.StringUtils.isNullOrEmpty;
 
 @Slf4j
@@ -77,13 +77,13 @@ public class SqliteCircuitDatabaseClient implements CircuitDatabaseClient {
     private boolean isResultSetValid(final ResultSet resultSet) throws SQLException {
         return !isNullOrEmpty(resultSet.getString(CIRCUIT_DB_NAME_KEY)) &&
                 !isNullOrEmpty(resultSet.getString(CIRCUIT_DB_COUNTRY_KEY)) &&
-                !isNullOrEmpty(resultSet.getString(CIRCUIT_DB_WIKI_KEY));
+                !isNullOrEmpty(resultSet.getString(DB_WIKI_KEY));
     }
 
     private Circuit toCircuit(final ResultSet resultSet) throws SQLException {
         final String circuitName = resultSet.getString(CIRCUIT_DB_NAME_KEY);
         final String country = resultSet.getString(CIRCUIT_DB_COUNTRY_KEY);
-        final String wiki = resultSet.getString(CIRCUIT_DB_WIKI_KEY);
+        final String wiki = resultSet.getString(DB_WIKI_KEY);
         return new Circuit(circuitName, country, wiki);
     }
 
