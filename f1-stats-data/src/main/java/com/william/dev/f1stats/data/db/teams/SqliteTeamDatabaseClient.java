@@ -65,11 +65,11 @@ public class SqliteTeamDatabaseClient implements TeamDatabaseClient {
             if (resultSet.next()) {
                 return Optional.of(toTeam(resultSet));
             }
+            return Optional.empty();
         } catch (final SQLException ex) {
             final String errorMessage = String.format("Error fetching team '%s' from database", name);
             throw new DataServiceException(errorMessage, ex);
         }
-        return Optional.empty();
     }
 
     @Override

@@ -98,6 +98,7 @@ public class F1StatsServiceResource implements F1StatsService {
     @Path("/driver")
     public Response getDriver(@QueryParam("firstName") final String firstName,
                               @QueryParam("lastName") final String lastName) {
+        log.info("Received request to get driver: {} {}", firstName, lastName);
         try {
             final Optional<Driver> driver = dataService.getDriver(firstName, lastName);
             if (driver.isPresent()) {
@@ -134,6 +135,7 @@ public class F1StatsServiceResource implements F1StatsService {
     @GET
     @Path("/team")
     public Response getTeam(@QueryParam("name") final String name) {
+        log.info("Received request to get team: {}", name);
         try {
             final Optional<Team> team = dataService.getTeam(name);
             if (team.isPresent()) {

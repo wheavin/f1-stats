@@ -4,11 +4,15 @@ containers:
 
   build-env:
     image: maven:3.6.1-jdk-11
+    run_as_current_user:
+      enabled: true
+      home_directory: /home/container-user
     volumes:
       - local: .
         container: /code
-      - local: ~/.m2
-        container: /root/.m2
+      - type: cache
+        name: maven-cache
+        container: /home/container-user/.m2
     working_directory: /code
 
   deploy-env:
@@ -58,7 +62,7 @@ tasks:
     description: Start a shell in the development environment.
     group: Utility tasks
     run:
-      container: deploy-env
+      container: build-env
       command: bash
 
 include:
