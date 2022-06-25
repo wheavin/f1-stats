@@ -1,6 +1,11 @@
 package com.william.dev.f1stats.application;
 
-import com.william.dev.f1stats.application.dto.*;
+import com.william.dev.f1stats.application.dto.CircuitDto;
+import com.william.dev.f1stats.application.dto.CircuitsDto;
+import com.william.dev.f1stats.application.dto.DriverDto;
+import com.william.dev.f1stats.application.dto.DriversDto;
+import com.william.dev.f1stats.application.dto.TeamDto;
+import com.william.dev.f1stats.application.dto.TeamsDto;
 import com.william.dev.f1stats.data.db.SqliteConnectionFactory;
 import de.hilling.junit.cdi.CdiTestJunitExtension;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,7 +25,6 @@ import java.util.Set;
 import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.lenient;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(CdiTestJunitExtension.class)
@@ -201,6 +205,23 @@ public class F1StatsServiceTest {
     public void list_all_teams_throws_exception() throws Exception {
         when(mockStatement.executeQuery()).thenThrow(new SQLException("Error when executing query"));
         final Response response = objUnderTest.listAllTeams();
+        assertInternalServerError(response);
+    }
+
+    @Test
+    public void list_all_team_names_successfully() throws Exception {
+        when(mockStatement.executeQuery()).thenReturn(TestData.allTeamsDataSet());
+        final Response response = objUnderTest.listAllTeamNames();
+        assertThat(response.getStatus()).isEqualTo(Status.OK.getStatusCode());
+
+        final Set<String> allTeamNames = (Set<String>) response.getEntity();
+        assertThat(allTeamNames).contains("Scuderia Ferrari");
+    }
+
+    @Test
+    public void list_all_team_names_throws_exception() throws Exception {
+        when(mockStatement.executeQuery()).thenThrow(new SQLException("some error"));
+        final Response response = objUnderTest.listAllTeamNames();
         assertInternalServerError(response);
     }
 

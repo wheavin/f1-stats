@@ -19,6 +19,7 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 import static com.google.common.truth.Truth.assertThat;
+import static com.william.dev.f1stats.data.db.teams.TeamTestData.allTeamNamesResultSet;
 import static com.william.dev.f1stats.data.db.teams.TeamTestData.allTeamsResultSet;
 import static com.william.dev.f1stats.data.db.teams.TeamTestData.defaultTeamResultSet;
 import static com.william.dev.f1stats.data.db.teams.TeamTestData.emptyTeamResultSet;
@@ -68,6 +69,28 @@ public class SqliteTeamDatabaseClientTest extends DatabaseClientTestBase {
 
     private static Stream<ResultSet> gets_all_teams_invalid_data_returns_empty_list() {
         return Stream.of(partialTeamResultSet(), defaultTeamResultSet(), emptyTeamResultSet());
+    }
+
+    @Test
+    public void gets_all_team_names_successfully() throws Exception {
+        when(mockStatement.executeQuery()).thenReturn(allTeamNamesResultSet());
+        final Set<String> teamNames = objUnderTest.getAllTeamNames();
+        assertThat(teamNames).contains("Scuderia Ferrari");
+        assertThat(teamNames).contains("Minardi F1 Team");
+    }
+
+    @Test
+    public void gets_empty_team_names() throws Exception {
+        when(mockStatement.executeQuery()).thenReturn(noTeamsResultSet());
+        final Set<String> teamNames = objUnderTest.getAllTeamNames();
+        assertThat(teamNames).isEmpty();
+    }
+
+    @Test
+    public void gets_all_team_names_with_exception() throws Exception {
+        mockSqlExceptionOnQuery();
+        final Exception exceptionThrown = assertThrows(DataServiceException.class, ()-> objUnderTest.getAllTeamNames());
+        assertThat(exceptionThrown.getMessage()).isEqualTo("Error fetching all team names from database");
     }
 
     @Test

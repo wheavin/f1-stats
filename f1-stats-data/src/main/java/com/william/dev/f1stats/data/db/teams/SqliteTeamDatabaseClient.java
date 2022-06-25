@@ -60,6 +60,21 @@ public class SqliteTeamDatabaseClient implements TeamDatabaseClient {
     }
 
     @Override
+    public Set<String> getAllTeamNames() throws DataServiceException {
+        log.debug("Fetching all team names from DB");
+        final Set<String> allTeamNames = new HashSet<>();
+        try (ResultSet resultSet = executeQuery(SqlStatements.GET_ALL_TEAM_NAMES_QUERY)) {
+            while (resultSet.next()) {
+                allTeamNames.add(resultSet.getString(TEAM_DB_NAME_KEY));
+            }
+        } catch (final SQLException ex) {
+            throw new DataServiceException("Error fetching all team names from database", ex);
+        }
+        log.debug("Found team names: {}", allTeamNames);
+        return allTeamNames;
+    }
+
+    @Override
     public Optional<Team> getTeam(final String name) throws DataServiceException {
         try (ResultSet resultSet = executeQuery(SqlStatements.GET_TEAM_BY_NAME_QUERY, name)) {
             if (resultSet.next()) {

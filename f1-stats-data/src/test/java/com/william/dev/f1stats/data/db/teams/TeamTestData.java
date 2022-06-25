@@ -1,5 +1,6 @@
 package com.william.dev.f1stats.data.db.teams;
 
+import com.google.common.collect.ImmutableMap;
 import com.william.dev.f1stats.data.db.utils.ResultSetStub;
 
 import java.sql.ResultSet;
@@ -36,6 +37,13 @@ public class TeamTestData {
     public static ResultSet emptyTeamResultSet() {
         final List<Map<String, Object>> teamData = new ArrayList<>();
         teamData.add(new HashMap<>());
+        return new ResultSetStub(teamData);
+    }
+
+    public static ResultSet allTeamNamesResultSet() {
+        final List<Map<String, Object>> teamData = new ArrayList<>();
+        teamData.add(ImmutableMap.of("name", "Scuderia Ferrari"));
+        teamData.add(ImmutableMap.of("name", "Minardi F1 Team"));
         return new ResultSetStub(teamData);
     }
 

@@ -4,6 +4,8 @@ containers:
 
   build-env:
     image: maven:3.6.1-jdk-11
+    additional_hostnames:
+      - f1-stats-build-env
     run_as_current_user:
       enabled: true
       home_directory: /home/container-user
@@ -17,9 +19,20 @@ containers:
 
   deploy-env:
     image: jboss/wildfly
+    additional_hostnames:
+      - f1-stats-deploy-env
     volumes:
       - local: .
         container: /code
+    ports:
+      - local: 9990
+        container: 9990
+      - local: 8080
+        container: 8080
+    health_check:
+      command: docker/scripts/health_check.sh
+      retries: 60
+      interval: 10s
     working_directory: /code
 
 tasks:
@@ -29,7 +42,7 @@ tasks:
     group: Build tasks
     run:
       container: build-env
-      command: mvn clean install -DskipTests
+      command: mvn clean install -Dmaven.test.skip=true
 
   unit:
     description: Run the unit tests.
@@ -41,8 +54,6 @@ tasks:
   deploy:
     description: Build and deploy the application to JBoss.
     group: Test tasks
-    dependencies:
-      - build-env
     prerequisites:
       - build
     run:
@@ -53,10 +64,10 @@ tasks:
       command: "'cp f1-stats-war/target/f1-stats-war.war /opt/jboss/wildfly/standalone/deployments/ && /opt/jboss/wildfly/bin/standalone.sh'"
       entrypoint: /bin/sh -c
       ports:
-        - local: 6001
-          container: 6001
         - local: 9990
           container: 9990
+        - local: 8080
+          container: 8080
 
   shell:
     description: Start a shell in the development environment.

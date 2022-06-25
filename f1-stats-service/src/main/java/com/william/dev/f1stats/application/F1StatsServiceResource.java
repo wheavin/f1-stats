@@ -127,8 +127,18 @@ public class F1StatsServiceResource implements F1StatsService {
     }
 
     @Override
+    @GET
+    @Path("/team/names")
     public Response listAllTeamNames() {
-        return null;
+        log.info("Received request to get all team names");
+        try {
+            final Set<String> teamNames = dataService.listAllTeamNames();
+            log.debug("Found team names: {}", teamNames);
+            return successResponse(teamNames);
+        } catch (final Exception ex) {
+            log.error("Error occurred when getting all team names", ex);
+            return serverErrorResponse();
+        }
     }
 
     @Override

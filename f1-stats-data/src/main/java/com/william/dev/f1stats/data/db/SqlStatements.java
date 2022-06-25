@@ -11,6 +11,7 @@ public final class SqlStatements {
     public static final String INSERT_DRIVER_SQL = "INSERT INTO Drivers (firstName, lastName, nationality, dateOfBirth, wiki) VALUES (?, ?, ?, ?, ?)";
 
     public static final String GET_ALL_TEAMS_QUERY = "SELECT * FROM Teams";
+    public static final String GET_ALL_TEAM_NAMES_QUERY = "SELECT name FROM Teams";
     public static final String GET_TEAM_BY_NAME_QUERY = "SELECT * FROM Teams WHERE name LIKE ?";
     public static final String INSERT_TEAM_SQL = "INSERT INTO Teams (name, nationality, wiki) VALUES (?, ?, ?)";
 }

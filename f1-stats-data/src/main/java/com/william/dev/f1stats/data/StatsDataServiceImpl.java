@@ -10,7 +10,6 @@ import com.william.dev.f1stats.data.db.teams.TeamDatabaseClient;
 import com.william.dev.f1stats.data.exception.DataServiceException;
 
 import javax.inject.Inject;
-import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
 
@@ -57,7 +56,7 @@ public class StatsDataServiceImpl implements StatsDataService {
 
     @Override
     public Set<String> listAllTeamNames() throws DataServiceException {
-        return Collections.emptySet();
+        return teamDatabaseClient.getAllTeamNames();
     }
 
     @Override

@@ -36,12 +36,12 @@
         <json.simple.version>1.1.1</json.simple.version>
 
         <!-- Unit testing -->
-        <junit.jupiter.version>5.6.2</junit.jupiter.version>
+        <junit.jupiter.version>5.8.2</junit.jupiter.version>
         <junit.platform.version>1.6.2</junit.platform.version>
         <google.truth.version>1.0.1</google.truth.version>
         <mockito.version>3.4.6</mockito.version>
         <cdi.junit5.version>0.4</cdi.junit5.version>
-        <cdi.test.core.version>3.3.5</cdi.test.core.version>
+        <cdi.test.core.version>3.4.0</cdi.test.core.version>
         <deltaspike.version>1.9.0</deltaspike.version>
         <weld.core.version>3.1.8.Final</weld.core.version>
         <wiremock.version>2.27.2</wiremock.version>

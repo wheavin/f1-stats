@@ -18,5 +18,8 @@ Get specific driver:
 Get all teams:
 > url 'http://localhost:8080/f1-stats-war/rest/v1/stats/team/all' | python -m json.tool
 
+Get all team names:
+> url 'http://localhost:8080/f1-stats-war/rest/v1/stats/team/names' | python -m json.tool
+
 Get specific team:
 > curl 'http://localhost:8080/f1-stats-war/rest/v1/stats/team?name=McLaren' | python -m json.tool

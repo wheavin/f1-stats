@@ -11,6 +11,8 @@ public interface TeamDatabaseClient {
 
     Set<Team> getAllTeams() throws DataServiceException;
 
+    Set<String> getAllTeamNames() throws DataServiceException;
+
     Optional<Team> getTeam(String name) throws DataServiceException;
 
     void addTeams(Set<Team> teams) throws DataInsertionException;
