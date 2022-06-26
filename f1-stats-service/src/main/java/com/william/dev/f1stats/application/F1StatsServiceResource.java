@@ -1,12 +1,9 @@
 package com.william.dev.f1stats.application;
 
-import com.william.dev.f1stats.application.dto.CircuitDto;
-import com.william.dev.f1stats.application.dto.CircuitsDto;
 import com.william.dev.f1stats.application.dto.DriverDto;
 import com.william.dev.f1stats.application.dto.DriversDto;
 import com.william.dev.f1stats.application.dto.TeamDto;
 import com.william.dev.f1stats.application.dto.TeamsDto;
-import com.william.dev.f1stats.data.api.Circuit;
 import com.william.dev.f1stats.data.api.Driver;
 import com.william.dev.f1stats.data.api.StatsDataService;
 import com.william.dev.f1stats.data.api.Team;
@@ -30,53 +27,6 @@ public class F1StatsServiceResource implements F1StatsService {
 
     @Inject
     private StatsDataService dataService;
-
-    @Override
-    @GET
-    @Path("/circuit/all")
-    public Response listAllCircuits() {
-        log.info("Received request to get all circuits");
-        try {
-            final Set<Circuit> circuits = dataService.listAllCircuits();
-            log.debug("Found circuits: {}", circuits);
-            return successResponse(new CircuitsDto(circuits));
-        } catch (final Exception ex) {
-            log.error("Error occurred when getting all circuits", ex);
-            return serverErrorResponse();
-        }
-    }
-
-    @Override
-    @GET
-    @Path("/circuit/names")
-    public Response listAllCircuitNames() {
-        log.info("Received request to get all circuit names");
-        try {
-            final Set<String> circuitNames = dataService.listAllCircuitNames();
-            log.debug("Found circuit names: {}", circuitNames);
-            return successResponse(circuitNames);
-        } catch (final Exception ex) {
-            log.error("Error occurred when getting all circuit names", ex);
-            return serverErrorResponse();
-        }
-    }
-
-    @Override
-    @GET
-    @Path("/circuit")
-    public Response getCircuit(@QueryParam("name") final String name) {
-        log.info("Received request to get circuit: {}", name);
-        try {
-            final Optional<Circuit> circuit = dataService.getCircuit(name);
-            if (circuit.isPresent()) {
-                return successResponse(new CircuitDto(circuit.get()));
-            }
-            return badRequestResponse(String.format("Circuit '%s' not found", name));
-        } catch (final Exception ex) {
-            log.error("Error occurred when getting circuit: {}", name, ex);
-            return serverErrorResponse();
-        }
-    }
 
     @Override
     @GET

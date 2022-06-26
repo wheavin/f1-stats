@@ -57,7 +57,7 @@ public class TestData {
         return new ResultSetStub(teamData);
     }
 
-    static ResultSet emptyDataSet() {
+    public static ResultSet emptyDataSet() {
         return new ResultSetStub(Collections.emptyList());
     }
 }

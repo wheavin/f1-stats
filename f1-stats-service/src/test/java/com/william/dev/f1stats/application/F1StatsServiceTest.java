@@ -1,7 +1,5 @@
 package com.william.dev.f1stats.application;
 
-import com.william.dev.f1stats.application.dto.CircuitDto;
-import com.william.dev.f1stats.application.dto.CircuitsDto;
 import com.william.dev.f1stats.application.dto.DriverDto;
 import com.william.dev.f1stats.application.dto.DriversDto;
 import com.william.dev.f1stats.application.dto.TeamDto;
@@ -47,80 +45,6 @@ public class F1StatsServiceTest {
     public void setup() throws Exception {
         lenient().doReturn(mockStatement).when(mockConnection).prepareStatement(anyString());
         lenient().doReturn(mockConnection).when(mockConnectionFactory).getConnection();
-    }
-
-    @Test
-    public void list_all_circuits_returns_list_successfully() throws Exception {
-        when(mockStatement.executeQuery()).thenReturn(TestData.allCircuitsDataSet());
-
-        final Response response = objUnderTest.listAllCircuits();
-        final CircuitsDto circuitsReturned = (CircuitsDto) response.getEntity();
-        assertThat(circuitsReturned.getCircuits()).hasSize(2);
-
-        final CircuitDto circuitReturned = circuitsReturned.getCircuits().iterator().next();
-        assertThat(circuitReturned.getName()).isEqualTo("Silverstone");
-        assertThat(circuitReturned.getCountry()).isEqualTo("United Kingdom");
-        assertThat(circuitReturned.getWiki()).isEqualTo("http://en.wikipedia.org/wiki/Silverstone_Circuit");
-    }
-
-    @Test
-    public void list_all_circuits_returns_empty_list() throws Exception {
-        when(mockStatement.executeQuery()).thenReturn(TestData.emptyDataSet());
-
-        final Response response = objUnderTest.listAllCircuits();
-        final CircuitsDto circuitsDtoReturned = (CircuitsDto) response.getEntity();
-        assertThat(circuitsDtoReturned.getCircuits()).isEmpty();
-    }
-
-    @Test
-    public void list_all_circuits_throws_exception() throws Exception {
-        when(mockStatement.executeQuery()).thenThrow(new SQLException("Error when executing query"));
-        final Response response = objUnderTest.listAllCircuits();
-        assertInternalServerError(response);
-    }
-
-    @Test
-    public void list_all_circuit_names_successfully() throws Exception {
-        when(mockStatement.executeQuery()).thenReturn(TestData.allCircuitsDataSet());
-
-        final Response response = objUnderTest.listAllCircuitNames();
-        assertThat(response.getStatus()).isEqualTo(Status.OK.getStatusCode());
-        final Set<String> circuitNames = (Set<String>) response.getEntity();
-        assertThat(circuitNames).containsExactly("Monza", "Silverstone");
-    }
-
-    @Test
-    public void list_all_circuit_names_throws_exception() throws Exception {
-        when(mockStatement.executeQuery()).thenThrow(new SQLException("some error"));
-        final Response response = objUnderTest.listAllCircuitNames();
-        assertInternalServerError(response);
-    }
-
-    @Test
-    public void get_specified_circuit_successfully() throws Exception {
-        when(mockStatement.executeQuery()).thenReturn(TestData.silverstoneDataSet());
-
-        final Response response = objUnderTest.getCircuit("Silverstone");
-        assertThat(response.getStatus()).isEqualTo(Status.OK.getStatusCode());
-
-        final CircuitDto circuitReturned = (CircuitDto) response.getEntity();
-        assertThat(circuitReturned.getName()).isEqualTo("Silverstone");
-        assertThat(circuitReturned.getCountry()).isEqualTo("United Kingdom");
-        assertThat(circuitReturned.getWiki()).isEqualTo("http://en.wikipedia.org/wiki/Silverstone_Circuit");
-    }
-
-    @Test
-    public void specified_circuit_not_found() throws Exception {
-        when(mockStatement.executeQuery()).thenReturn(TestData.emptyDataSet());
-        final Response response = objUnderTest.getCircuit("Silverstone");
-        assertBadRequest(response, "Circuit 'Silverstone' not found");
-    }
-
-    @Test
-    public void get_specified_circuit_throws_exception() throws Exception {
-        when(mockStatement.executeQuery()).thenThrow(new SQLException("some error"));
-        final Response response = objUnderTest.getCircuit("Silverstone");
-        assertInternalServerError(response);
     }
 
     @Test
