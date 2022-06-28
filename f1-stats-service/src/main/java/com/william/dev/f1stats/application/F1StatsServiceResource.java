@@ -1,10 +1,7 @@
 package com.william.dev.f1stats.application;
 
-import com.william.dev.f1stats.application.dto.DriverDto;
-import com.william.dev.f1stats.application.dto.DriversDto;
 import com.william.dev.f1stats.application.dto.TeamDto;
 import com.william.dev.f1stats.application.dto.TeamsDto;
-import com.william.dev.f1stats.data.api.Driver;
 import com.william.dev.f1stats.data.api.StatsDataService;
 import com.william.dev.f1stats.data.api.Team;
 import lombok.extern.slf4j.Slf4j;
@@ -27,39 +24,6 @@ public class F1StatsServiceResource implements F1StatsService {
 
     @Inject
     private StatsDataService dataService;
-
-    @Override
-    @GET
-    @Path("/driver/all")
-    public Response listAllDrivers() {
-        log.info("Received request to get all drivers");
-        try {
-            final Set<Driver> drivers = dataService.listAllDrivers();
-            log.debug("Found circuits: {}", drivers);
-            return successResponse(new DriversDto(drivers));
-        } catch (final Exception ex) {
-            log.error("Error occurred when getting all drivers", ex);
-            return serverErrorResponse();
-        }
-    }
-
-    @Override
-    @GET
-    @Path("/driver")
-    public Response getDriver(@QueryParam("firstName") final String firstName,
-                              @QueryParam("lastName") final String lastName) {
-        log.info("Received request to get driver: {} {}", firstName, lastName);
-        try {
-            final Optional<Driver> driver = dataService.getDriver(firstName, lastName);
-            if (driver.isPresent()) {
-                return successResponse(new DriverDto(driver.get()));
-            }
-            return badRequestResponse(String.format("Driver '%s %s' not found", firstName, lastName));
-        } catch (final Exception ex) {
-            log.error("Error occurred when getting driver: {} {}", firstName, lastName, ex);
-            return serverErrorResponse();
-        }
-    }
 
     @Override
     @GET

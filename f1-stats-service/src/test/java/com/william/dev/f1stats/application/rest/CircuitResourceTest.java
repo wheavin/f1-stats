@@ -3,10 +3,7 @@ package com.william.dev.f1stats.application.rest;
 import com.william.dev.f1stats.application.TestData;
 import com.william.dev.f1stats.application.dto.CircuitDto;
 import com.william.dev.f1stats.application.dto.CircuitsDto;
-import de.hilling.junit.cdi.CdiTestJunitExtension;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
 
 import javax.inject.Inject;
 import javax.ws.rs.core.Response;
@@ -17,9 +14,7 @@ import static com.google.common.truth.Truth.assertThat;
 import static com.william.dev.f1stats.application.rest.assertions.ResponseAssertions.assertThatResponse;
 import static org.mockito.Mockito.when;
 
-@ExtendWith(CdiTestJunitExtension.class)
-@ExtendWith(MockitoExtension.class)
-public class CircuitResourceTest extends ResourceTestBase {
+public class CircuitResourceTest extends ResourceTest {
 
     @Inject
     private CircuitResource objUnderTest;
@@ -29,7 +24,7 @@ public class CircuitResourceTest extends ResourceTestBase {
         when(mockStatement.executeQuery()).thenReturn(TestData.allCircuitsDataSet());
 
         final Response response = objUnderTest.listAllCircuits();
-        assertThatResponse(response).isSuccessful();
+        assertThatResponse(response).isOk();
 
         final CircuitsDto circuitsReturned = (CircuitsDto) response.getEntity();
         assertThat(circuitsReturned.getCircuits()).hasSize(2);
@@ -44,7 +39,7 @@ public class CircuitResourceTest extends ResourceTestBase {
         when(mockStatement.executeQuery()).thenReturn(TestData.emptyDataSet());
 
         final Response response = objUnderTest.listAllCircuits();
-        assertThatResponse(response).isSuccessful();
+        assertThatResponse(response).isOk();
 
         final CircuitsDto circuitsDtoReturned = (CircuitsDto) response.getEntity();
         assertThat(circuitsDtoReturned.getCircuits()).isEmpty();
@@ -61,7 +56,7 @@ public class CircuitResourceTest extends ResourceTestBase {
     public void list_all_circuit_names_successfully() throws Exception {
         when(mockStatement.executeQuery()).thenReturn(TestData.allCircuitsDataSet());
         final Response response = objUnderTest.listAllCircuitNames();
-        assertThatResponse(response).isSuccessful();
+        assertThatResponse(response).isOk();
         final Set<String> circuitNames = (Set<String>) response.getEntity();
         assertThat(circuitNames).containsExactly("Monza", "Silverstone");
     }
@@ -78,7 +73,7 @@ public class CircuitResourceTest extends ResourceTestBase {
         when(mockStatement.executeQuery()).thenReturn(TestData.silverstoneDataSet());
 
         final Response response = objUnderTest.getCircuit("Silverstone");
-        assertThatResponse(response).isSuccessful();
+        assertThatResponse(response).isOk();
 
         final CircuitDto circuitReturned = (CircuitDto) response.getEntity();
         assertThat(circuitReturned.getName()).isEqualTo("Silverstone");

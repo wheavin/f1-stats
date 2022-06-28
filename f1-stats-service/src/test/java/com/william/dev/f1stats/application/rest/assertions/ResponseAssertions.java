@@ -16,7 +16,7 @@ public class ResponseAssertions {
         return new ResponseAssertions(response);
     }
 
-    public void isSuccessful() {
+    public void isOk() {
         assertThat(response.getStatus()).isEqualTo(Response.Status.OK.getStatusCode());
     }
 

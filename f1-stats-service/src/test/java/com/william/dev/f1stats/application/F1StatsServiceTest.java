@@ -1,7 +1,5 @@
 package com.william.dev.f1stats.application;
 
-import com.william.dev.f1stats.application.dto.DriverDto;
-import com.william.dev.f1stats.application.dto.DriversDto;
 import com.william.dev.f1stats.application.dto.TeamDto;
 import com.william.dev.f1stats.application.dto.TeamsDto;
 import com.william.dev.f1stats.data.db.SqliteConnectionFactory;
@@ -45,61 +43,6 @@ public class F1StatsServiceTest {
     public void setup() throws Exception {
         lenient().doReturn(mockStatement).when(mockConnection).prepareStatement(anyString());
         lenient().doReturn(mockConnection).when(mockConnectionFactory).getConnection();
-    }
-
-    @Test
-    public void lists_all_drivers_returns_list_successfully() throws Exception {
-        when(mockStatement.executeQuery()).thenReturn(TestData.allDriversDataSet());
-
-        final Response response = objUnderTest.listAllDrivers();
-        final DriversDto driversReturned = (DriversDto) response.getEntity();
-        assertThat(driversReturned.getDrivers()).hasSize(1);
-
-        final DriverDto driverReturned = driversReturned.getDrivers().iterator().next();
-        assertThat(driverReturned.getFirstName()).isEqualTo("Fernando");
-        assertThat(driverReturned.getLastName()).isEqualTo("Alonso");
-        assertThat(driverReturned.getNationality()).isEqualTo("Spanish");
-    }
-
-    @Test
-    public void lists_all_drivers_returns_empty_list() throws Exception {
-        when(mockStatement.executeQuery()).thenReturn(TestData.emptyDataSet());
-
-        final Response response = objUnderTest.listAllDrivers();
-        final DriversDto driversDtoReturned = (DriversDto) response.getEntity();
-        assertThat(driversDtoReturned.getDrivers()).isEmpty();
-    }
-
-    @Test
-    public void lists_all_drivers_throws_exception() throws Exception {
-        when(mockStatement.executeQuery()).thenThrow(new SQLException("some error"));
-        final Response response = objUnderTest.listAllDrivers();
-        assertInternalServerError(response);
-    }
-
-    @Test
-    public void get_specified_driver_successfully() throws Exception {
-        when(mockStatement.executeQuery()).thenReturn(TestData.allDriversDataSet());
-
-        final Response response = objUnderTest.getDriver("Fernando", "Alonso");
-        final DriverDto driverReturned = (DriverDto) response.getEntity();
-        assertThat(driverReturned.getFirstName()).isEqualTo("Fernando");
-        assertThat(driverReturned.getLastName()).isEqualTo("Alonso");
-        assertThat(driverReturned.getNationality()).isEqualTo("Spanish");
-    }
-
-    @Test
-    public void get_specified_driver_not_found() throws Exception {
-        when(mockStatement.executeQuery()).thenReturn(TestData.emptyDataSet());
-        final Response response = objUnderTest.getDriver("Fernando", "Alonso");
-        assertBadRequest(response, "Driver 'Fernando Alonso' not found");
-    }
-
-    @Test
-    public void get_specified_driver_throws_exception() throws Exception {
-        when(mockStatement.executeQuery()).thenThrow(new SQLException("some error"));
-        final Response response = objUnderTest.getDriver("Fernando", "Alonso");
-        assertInternalServerError(response);
     }
 
     @Test
