@@ -1,4 +1,4 @@
-package com.william.dev.f1stats.application;
+package com.william.dev.f1stats.application.rest;
 
 import com.william.dev.f1stats.application.dto.TeamDto;
 import com.william.dev.f1stats.application.dto.TeamsDto;
@@ -13,74 +13,60 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 import java.util.Optional;
 import java.util.Set;
 
 @Slf4j
-@Path("/stats")
+@Path("/stats/team")
 @Produces(MediaType.APPLICATION_JSON)
-public class F1StatsServiceResource implements F1StatsService {
+public class TeamResource {
 
     @Inject
     private StatsDataService dataService;
 
-    @Override
+    @Inject
+    private ResponseHandler responseHandler;
+
     @GET
-    @Path("/team/all")
+    @Path("/all")
     public Response listAllTeams() {
         log.info("Received request to get all teams");
         try {
             final Set<Team> teams = dataService.listAllTeams();
             log.debug("Found teams: {}", teams);
-            return successResponse(new TeamsDto(teams));
+            return responseHandler.successResponse(new TeamsDto(teams));
         } catch (final Exception ex) {
             log.error("Error occurred when getting all teams", ex);
-            return serverErrorResponse();
+            return responseHandler.serverErrorResponse();
         }
     }
 
-    @Override
     @GET
-    @Path("/team/names")
+    @Path("/names")
     public Response listAllTeamNames() {
         log.info("Received request to get all team names");
         try {
             final Set<String> teamNames = dataService.listAllTeamNames();
             log.debug("Found team names: {}", teamNames);
-            return successResponse(teamNames);
+            return responseHandler.successResponse(teamNames);
         } catch (final Exception ex) {
             log.error("Error occurred when getting all team names", ex);
-            return serverErrorResponse();
+            return responseHandler.serverErrorResponse();
         }
     }
 
-    @Override
     @GET
-    @Path("/team")
     public Response getTeam(@QueryParam("name") final String name) {
         log.info("Received request to get team: {}", name);
         try {
             final Optional<Team> team = dataService.getTeam(name);
             if (team.isPresent()) {
-                return successResponse(new TeamDto(team.get()));
+                return responseHandler.successResponse(new TeamDto(team.get()));
             }
-            return badRequestResponse(String.format("Team '%s' not found", name));
+            return responseHandler.badRequestResponse(String.format("Team '%s' not found", name));
         } catch (final Exception ex) {
             log.error("Error occurred when getting team: {}", name);
-            return serverErrorResponse();
+            return responseHandler.serverErrorResponse();
         }
-    }
-
-    private Response successResponse(final Object entity) {
-        return Response.ok(entity).build();
-    }
-
-    private Response badRequestResponse(final String message) {
-        return Response.status(Status.BAD_REQUEST).entity(message).build();
-    }
-
-    private Response serverErrorResponse() {
-        return Response.serverError().entity("Internal Server Error").build();
     }
 }
