@@ -31,6 +31,7 @@ public class DriverResourceTest extends ResourceTest {
         assertThat(driverReturned.getFirstName()).isEqualTo("Fernando");
         assertThat(driverReturned.getLastName()).isEqualTo("Alonso");
         assertThat(driverReturned.getNationality()).isEqualTo("Spanish");
+        assertThat(driverReturned.getDateOfBirth()).isEqualTo("29/07/1981");
     }
 
     @Test

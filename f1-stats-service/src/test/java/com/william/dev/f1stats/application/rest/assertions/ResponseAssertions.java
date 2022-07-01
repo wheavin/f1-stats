@@ -1,5 +1,7 @@
 package com.william.dev.f1stats.application.rest.assertions;
 
+import com.william.dev.f1stats.application.dto.FailureMessage;
+
 import javax.ws.rs.core.Response;
 
 import static com.google.common.truth.Truth.assertThat;
@@ -30,7 +32,7 @@ public class ResponseAssertions {
     }
 
     public void hasMessage(final String expectedMessage) {
-        final String responseMessage = (String) response.getEntity();
-        assertThat(responseMessage).isEqualTo(expectedMessage);
+        final FailureMessage failureMessage = (FailureMessage) response.getEntity();
+        assertThat(failureMessage.getFailure()).isEqualTo(expectedMessage);
     }
 }

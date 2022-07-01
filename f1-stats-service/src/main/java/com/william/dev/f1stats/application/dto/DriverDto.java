@@ -4,10 +4,13 @@ import com.william.dev.f1stats.data.api.Driver;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Data
 public class DriverDto {
+    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy");
+
     private final String firstName;
     private final String lastName;
     private final String nationality;
@@ -23,7 +26,7 @@ public class DriverDto {
         this.wiki = driver.getWiki();
     }
 
-    public Date getDateOfBirth() {
-        return new Date(dateOfBirth.getTime());
+    public String getDateOfBirth() {
+        return DATE_FORMAT.format(dateOfBirth);
     }
 }

@@ -1,5 +1,7 @@
 package com.william.dev.f1stats.application.rest;
 
+import com.william.dev.f1stats.application.dto.FailureMessage;
+
 import javax.ws.rs.core.Response;
 
 public class ResponseHandler {
@@ -11,10 +13,12 @@ public class ResponseHandler {
     }
 
     public Response badRequestResponse(final String message) {
-        return Response.status(Response.Status.BAD_REQUEST).entity(message).build();
+        final FailureMessage failureMessage = new FailureMessage(message);
+        return Response.status(Response.Status.BAD_REQUEST).entity(failureMessage).build();
     }
 
     public Response serverErrorResponse() {
-        return Response.serverError().entity(INTERNAL_SERVER_ERROR).build();
+        final FailureMessage failureMessage = new FailureMessage(INTERNAL_SERVER_ERROR);
+        return Response.serverError().entity(failureMessage).build();
     }
 }
