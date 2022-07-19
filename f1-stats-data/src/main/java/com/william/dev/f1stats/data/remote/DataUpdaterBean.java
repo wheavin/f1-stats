@@ -40,7 +40,7 @@ public class DataUpdaterBean {
             final Set<Circuit> circuitsToAdd = dataParser.parseCircuits(circuitData);
             circuitDatabaseClient.addCircuits(circuitsToAdd);
             log.info("Update of circuits completed in {}s. Number of circuits inserted = {}",
-                    getDurationAsSeconds(startTime), circuitsToAdd.size());
+                    durationAsSeconds(startTime), circuitsToAdd.size());
         } catch (final DataParseException | DataInsertionException ex) {
             log.error("Error updating circuit data", ex);
         }
@@ -54,7 +54,7 @@ public class DataUpdaterBean {
             final Set<Driver> driversToAdd = dataParser.parseDrivers(driverData);
             driverDatabaseClient.addDrivers(driversToAdd);
             log.info("Update of drivers completed in {}s. Number of drivers inserted = {}",
-                    getDurationAsSeconds(startTime), driversToAdd.size());
+                    durationAsSeconds(startTime), driversToAdd.size());
         } catch (final DataParseException | DataInsertionException ex) {
             log.error("Error updating driver data", ex);
         }
@@ -68,13 +68,13 @@ public class DataUpdaterBean {
             final Set<Team> teamsToAdd = dataParser.parseTeams(teamData);
             teamDatabaseClient.addTeams(teamsToAdd);
             log.info("Update of teams completed in {}s. Number of teams inserted = {}",
-                    getDurationAsSeconds(startTime), teamsToAdd.size());
+                    durationAsSeconds(startTime), teamsToAdd.size());
         } catch (final DataParseException | DataInsertionException ex) {
             log.error("Error updating team data", ex);
         }
     }
 
-    private long getDurationAsSeconds(final long startTimeNanoSeconds) {
+    private long durationAsSeconds(final long startTimeNanoSeconds) {
         return TimeUnit.SECONDS.convert(System.nanoTime() - startTimeNanoSeconds, TimeUnit.NANOSECONDS);
     }
 }

@@ -1,4 +1,4 @@
-package com.william.dev.f1stats.application;
+package com.william.dev.f1stats.application.rest;
 
 import lombok.extern.slf4j.Slf4j;
 

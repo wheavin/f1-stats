@@ -28,7 +28,6 @@ import static com.william.dev.f1stats.data.db.teams.TeamTestData.noTeamsResultSe
 import static com.william.dev.f1stats.data.db.teams.TeamTestData.partialTeamResultSet;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -122,7 +121,7 @@ public class SqliteTeamDatabaseClientTest extends DatabaseClientTestBase {
     public void adds_teams_successfully() throws Exception {
         final Set<Team> teamsToAdd = createTeams();
         objUnderTest.addTeams(teamsToAdd);
-        verify(mockStatement, times(2)).execute();
+        assertExecuteBatch(2);
     }
 
     @Test

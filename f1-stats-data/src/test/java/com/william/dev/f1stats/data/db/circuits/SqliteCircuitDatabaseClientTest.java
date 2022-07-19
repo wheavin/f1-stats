@@ -28,7 +28,6 @@ import static com.william.dev.f1stats.data.db.circuits.CircuitTestData.silversto
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -118,7 +117,7 @@ public class SqliteCircuitDatabaseClientTest extends DatabaseClientTestBase {
     public void adds_circuits_successfully() throws Exception {
         final Set<Circuit> circuitsToAdd = createCircuits();
         objUnderTest.addCircuits(circuitsToAdd);
-        verify(mockStatement, times(2)).execute();
+        assertExecuteBatch(2);
     }
 
     @Test

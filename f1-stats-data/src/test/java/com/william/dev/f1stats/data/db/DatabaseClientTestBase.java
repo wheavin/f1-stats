@@ -9,6 +9,9 @@ import java.sql.SQLException;
 
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.lenient;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class DatabaseClientTestBase {
@@ -25,6 +28,7 @@ public class DatabaseClientTestBase {
     public void mockDbConnection() throws SQLException {
         doReturn(mockConnection).when(mockConnectionFactory).getConnection();
         doReturn(mockStatement).when(mockConnection).prepareStatement(anyString());
+        lenient().when(mockStatement.executeBatch()).thenReturn(new int[]{});
     }
 
     protected void mockSqlExceptionOnQuery() throws SQLException {
@@ -32,6 +36,11 @@ public class DatabaseClientTestBase {
     }
 
     protected void mockSqlExceptionOnAdd() throws SQLException {
-        when(mockStatement.execute()).thenThrow(new SQLException("Some error occurred"));
+        when(mockStatement.executeBatch()).thenThrow(new SQLException("Some error occurred"));
+    }
+
+    protected void assertExecuteBatch(final int itemCount) throws SQLException {
+        verify(mockStatement, times(itemCount)).addBatch();
+        verify(mockStatement).executeBatch();
     }
 }
